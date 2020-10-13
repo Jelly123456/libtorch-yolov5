@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(libtorch-yolov5)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall  -static-libstdc++"")
 
 # Try to find OpenCV
 # set(OpenCV_DIR ....)

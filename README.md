@@ -1,6 +1,7 @@
 ## Introduction
 
 A LibTorch inference implementation of the [yolov5](https://github.com/ultralytics/yolov5) object detection algorithm. Both GPU and CPU are supported.
+This will enable the AI scientist can train the model with pytorch and deploy the model in C++ by adding the flexibility.
 
 
 
@@ -10,6 +11,12 @@ A LibTorch inference implementation of the [yolov5](https://github.com/ultralyti
 - CUDA 10.2
 - OpenCV 4.1.0
 - LibTorch 1.6.0
+
+## Some specail notes:
+- GPU inference is only supported in linux platform, not supported in Windows. There is a bug in libtorch 1.6. https://github.com/yf225/pytorch-cpp-issue-tracker/issues/378
+- Exported torchscript weights need to be consistent when executing inference. If the weight is exported in linux, then it can only be parsed in linux when inferencing. Also if it is exported in CPU, then the inference can only be run with CPU. The same rules apply to GPU or multiple GPUs.
+- When exporting in python, the image size and batch number can also affect the results in inference phase. These two parameters need to be consisitent between training and inference. In this project, please set "image size" to 640 and "batch size" to 1 because the inference code does not add the flexibility to accept other parameter matrix.
+- Libtorch requires g++ to support C++14 standard. Check g++ version before running.
 
 
 
@@ -37,7 +44,14 @@ img = torch.zeros((opt.batch_size, 3, *opt.img_size)).to(device='cuda')
 model = attempt_load(opt.weights, map_location=torch.device('cuda'))
 ```
 
+**Multiple GPU support**: The below example is to use cuda device 0. Feel free to change the nuber inside cuda:0 if you want another cuda device. The command to check cuda device is "nvidia-smi".
 
+```python
+# line 28
+img = torch.zeros((opt.batch_size, 3, *opt.img_size)).to(device='cuda:0')  
+# line 31
+model = attempt_load(opt.weights, map_location=torch.device('cuda:0'))
+```
 
 Export a trained yolov5 model:
 
@@ -56,7 +70,8 @@ $ cd /path/to/libtorch-yolo5
 $ wget https://download.pytorch.org/libtorch/cu102/libtorch-cxx11-abi-shared-with-deps-1.6.0.zip
 $ unzip libtorch-cxx11-abi-shared-with-deps-1.6.0.zip
 $ mkdir build && cd build
-$ cmake .. && make
+$ cmake .. or cmake .. -DCMAKE_C_COMPILER="your gcc compiler path" -DCMAKE_CXX_COMPILER="your g++ compiler path" 
+$ make
 ```
 
 
