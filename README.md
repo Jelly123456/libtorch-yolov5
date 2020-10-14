@@ -1,5 +1,6 @@
 ## Introduction
 
+Inspired by https://github.com/yasenh/libtorch-yolov5 and adding several improvements for my own business use case.
 A LibTorch inference implementation of the [yolov5](https://github.com/ultralytics/yolov5) object detection algorithm. Both GPU and CPU are supported.
 This will enable the AI scientist can train the model with pytorch and deploy the model in C++ by adding the flexibility.
 
@@ -19,6 +20,8 @@ This will enable the AI scientist can train the model with pytorch and deploy th
 - Libtorch requires g++ to support C++14 standard. Check g++ version before running.
 
 
+## To do list:
+- Modify the inference code to support multiple GPUS
 
 ## TorchScript Model Export
 
